@@ -1,9 +1,13 @@
 # Solution
 
 1. Ensure Multicast Routing is enabled on all devices
-   1. ip multicast-routing
-   2. ip pim auto-rp listener
-   
+```
+   !
+   ip multicast-routing
+   !
+   ip pim auto-rp listener
+   !
+```   
 2. One the Green and Blue Router Configure a non-routable IP and ACLs to only allow specific traffic through
 ### Green
 ```
