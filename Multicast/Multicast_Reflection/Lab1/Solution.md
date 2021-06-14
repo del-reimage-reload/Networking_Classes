@@ -6,6 +6,7 @@
    
 2. One the Green and Blue Router Configure a non-routable IP and ACLs to only allow specific traffic through
 ### Green
+```
 ip access-list standard deny
  deny   any log
 !
@@ -21,7 +22,7 @@ interface Ethernet0/1
  ip access-group deny in
  ip access-group mcast out
  ip pim sparse-mode
-
+```
 
 
 ### Blue_Edge
