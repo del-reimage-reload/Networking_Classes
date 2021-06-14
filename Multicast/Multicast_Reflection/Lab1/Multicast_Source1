@@ -1,0 +1,133 @@
+
+!
+version 15.3
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+!
+hostname MulticastSource1
+!
+boot-start-marker
+boot-end-marker
+!
+!
+!
+no aaa new-model
+clock timezone EET 2 0
+mmi polling-interval 60
+no mmi auto-configure
+no mmi pvc
+mmi snmp-timeout 180
+!
+!
+!
+!
+
+
+!
+!
+!
+!
+no ip domain lookup
+ip domain name lab.com
+ip multicast-routing 
+no ip cef
+no ipv6 cef
+ipv6 multicast rpf use-bgp
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+!
+!
+!
+!
+redundancy
+!
+!
+csdb tcp synwait-time 30
+csdb tcp idle-time 3600
+csdb tcp finwait-time 5
+csdb tcp reassembly max-memory 1024
+csdb tcp reassembly max-queue-length 16
+csdb udp idle-time 30
+csdb icmp idle-time 10
+csdb session max-session 65535
+! 
+!
+!
+!
+crypto isakmp diagnose error
+!
+!
+!
+!
+!
+!
+!
+!
+interface Ethernet0/0
+ no shutdown
+ description Connection to switch
+ ip address 100.100.100.2 255.255.255.0
+ no ip route-cache
+ ip igmp join-group 225.1.1.1
+!
+interface Ethernet0/1
+ no shutdown
+ no ip address
+ no ip route-cache
+ shutdown
+!
+interface Ethernet0/2
+ no shutdown
+ no ip address
+ no ip route-cache
+ shutdown
+!
+interface Ethernet0/3
+ no shutdown
+ no ip address
+ no ip route-cache
+ shutdown
+!
+ip default-gateway 100.100.100.254
+ip forward-protocol nd
+!
+!
+no ip http server
+no ip http secure-server
+ip pim autorp listener
+!
+ip sla auto discovery
+ip sla 1
+ udp-jitter 226.1.1.1 8208 endpoint-list mcast-rcvrs source-ip 100.100.100.2 source-port 8208
+ request-data-size 17512
+ frequency 5
+ip sla schedule 1 life forever start-time now
+ip sla endpoint-list type ip mcast-rcvrs
+ ip-address 100.100.100.2 port 8208
+ip sla responder
+!
+!
+!
+control-plane
+!
+!
+!
+!
+!
+!
+!
+line con 0
+ logging synchronous
+line aux 0
+line vty 0 4
+ login
+ transport input all
+!
+!
+end
