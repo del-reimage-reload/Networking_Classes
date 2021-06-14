@@ -1,0 +1,215 @@
+
+!
+version 15.3
+no service timestamps debug uptime
+no service timestamps log uptime
+no service password-encryption
+!
+hostname R2
+!
+boot-start-marker
+boot-end-marker
+!
+!
+!
+no aaa new-model
+clock timezone EET 2 0
+mmi polling-interval 60
+no mmi auto-configure
+no mmi pvc
+mmi snmp-timeout 180
+no ip icmp rate-limit unreachable
+!
+!
+!
+!
+
+
+!
+!
+!
+!
+no ip domain lookup
+no ip cef
+ipv6 unicast-routing
+ipv6 cef
+ipv6 multicast rpf use-bgp
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+!
+!
+!
+!
+redundancy
+!
+!
+ip tcp synwait-time 5
+ip ssh version 1
+csdb tcp synwait-time 30
+csdb tcp idle-time 3600
+csdb tcp finwait-time 5
+csdb tcp reassembly max-memory 1024
+csdb tcp reassembly max-queue-length 16
+csdb udp idle-time 30
+csdb icmp idle-time 10
+csdb session max-session 65535
+! 
+!
+!
+!
+crypto isakmp diagnose error
+!
+!
+!
+!
+!
+!
+!
+!
+interface Loopback0
+ no shutdown
+ ip address 2.2.2.2 255.255.255.255
+!
+interface Ethernet0/0
+ no shutdown
+ no ip address
+ shutdown
+!
+interface Ethernet0/1
+ no shutdown
+ no ip address
+ shutdown
+!
+interface Ethernet0/2
+ no shutdown
+ no ip address
+ shutdown
+!
+interface Ethernet0/3
+ no shutdown
+ no ip address
+ shutdown
+!
+interface Serial1/0
+ no shutdown
+ no ip address
+ serial restart-delay 0
+!
+interface Serial1/1
+ no shutdown
+ no ip address
+ serial restart-delay 0
+!
+interface Serial1/2
+ no shutdown
+ no ip address
+ serial restart-delay 0
+!
+interface Serial1/3
+ no shutdown
+ no ip address
+ serial restart-delay 0
+!
+interface Serial2/0
+ no shutdown
+ no ip address
+ encapsulation frame-relay
+ serial restart-delay 0
+ no frame-relay inverse-arp
+!
+interface Serial2/0.12 point-to-point
+ no shutdown
+ ip address 10.1.1.2 255.255.255.252
+ ipv6 address 2026::12:2/122
+ ipv6 ospf 6 area 12
+ frame-relay interface-dlci 221   
+!
+interface Serial2/0.23 point-to-point
+ no shutdown
+ ip address 10.1.1.5 255.255.255.252
+ ip ospf authentication message-digest
+ ip ospf message-digest-key 1 md5 Nugget!23
+ ipv6 address 2026::1:1/122
+ ipv6 ospf 6 area 0
+ frame-relay interface-dlci 223   
+!
+interface Serial2/1
+ no shutdown
+ no ip address
+ serial restart-delay 0
+!
+interface Serial2/2
+ no shutdown
+ no ip address
+ serial restart-delay 0
+!
+interface Serial2/3
+ no shutdown
+ no ip address
+ serial restart-delay 0
+!
+interface Serial3/0
+ no shutdown
+ no ip address
+ serial restart-delay 0
+!
+interface Serial3/1
+ no shutdown
+ no ip address
+ serial restart-delay 0
+!
+interface Serial3/2
+ no shutdown
+ no ip address
+ serial restart-delay 0
+!
+interface Serial3/3
+ no shutdown
+ no ip address
+ serial restart-delay 0
+!
+router ospf 1
+ network 10.1.1.0 0.0.0.3 area 12
+ network 10.1.1.4 0.0.0.3 area 0
+!
+ip forward-protocol nd
+!
+!
+no ip http server
+no ip http secure-server
+!
+ipv6 router ospf 6
+!
+!
+!
+!
+control-plane
+!
+!
+!
+!
+!
+!
+alias exec c config terminal
+!
+line con 0
+ exec-timeout 0 0
+ privilege level 15
+ logging synchronous
+ stopbits 1
+line aux 0
+ exec-timeout 0 0
+ privilege level 15
+ logging synchronous
+ stopbits 1
+line vty 0 4
+ login
+ transport input all
+!
+!
+end

@@ -1,0 +1,161 @@
+
+!
+! Last configuration change at 18:56:56 EET Fri Apr 24 2020
+!
+version 15.2
+no service timestamps debug uptime
+no service timestamps log uptime
+no service password-encryption
+service compress-config
+no service dhcp
+!
+hostname ASW1
+!
+boot-start-marker
+boot-end-marker
+!
+!
+!
+no aaa new-model
+clock timezone EET 2 0
+!
+!
+!
+!
+!
+vtp file nvram:vlan.dat
+vtp domain CBTNuggets
+vtp mode transparent
+no ip routing
+no ip icmp rate-limit unreachable
+!
+!
+!
+no ip domain-lookup
+no ip cef
+ipv6 unicast-routing
+ipv6 cef
+!
+!
+archive
+ log config
+  hidekeys
+!
+spanning-tree mode rapid-pvst
+spanning-tree extend system-id
+!
+vlan internal allocation policy ascending
+!
+vlan 10
+ name User-Network
+!
+vlan 20 
+!
+vlan 200
+ name Management-Network
+!
+ip tcp synwait-time 5
+! 
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+macro name add_vlan
+end
+vlan database
+vlan $v
+exit
+@
+macro name del_vlan
+end
+vlan database
+no vlan $v
+exit
+@
+!
+!
+interface Ethernet0/0
+ no shutdown
+ description *** Unused for Layer2 EtherSwitch ***
+ shutdown
+!
+interface Ethernet0/1
+ no shutdown
+ description *** Unused for Layer2 EtherSwitch ***
+ switchport access vlan 10
+ spanning-tree portfast edge
+!
+interface Ethernet0/2
+ no shutdown
+ switchport access vlan 10
+ spanning-tree portfast edge
+!
+interface Ethernet0/3
+ no shutdown
+!
+interface Ethernet1/0
+ no shutdown
+ switchport trunk encapsulation dot1q
+!
+interface Ethernet1/1
+ no shutdown
+ switchport trunk encapsulation dot1q
+ switchport trunk native vlan 200
+ switchport mode trunk
+!
+interface Ethernet1/2
+ no shutdown
+ switchport trunk encapsulation dot1q
+ switchport trunk native vlan 200
+ shutdown
+!
+interface Ethernet1/3
+ no shutdown
+ switchport trunk encapsulation dot1q
+ switchport trunk native vlan 200
+ switchport mode trunk
+!
+interface Vlan1
+ no shutdown
+ no ip address
+ no ip route-cache
+ shutdown
+!
+interface Vlan10
+ no shutdown
+ ip address 10.2.1.3 255.255.255.0
+!
+interface Vlan200
+ no shutdown
+ ip address 192.168.1.131 255.255.255.224
+!
+ip default-gateway 10.2.1.254
+ip forward-protocol nd
+!
+!
+no ip http server
+no ip http secure-server
+!
+!
+!
+!
+!
+control-plane
+!
+!
+line con 0
+ logging synchronous
+line aux 0
+line vty 0 4
+ login
+!
+!
+end

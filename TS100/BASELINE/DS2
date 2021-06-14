@@ -1,0 +1,203 @@
+
+!
+! Last configuration change at 18:56:52 EET Fri Apr 24 2020
+!
+version 15.2
+no service timestamps debug uptime
+no service timestamps log uptime
+no service password-encryption
+service compress-config
+!
+hostname DSW2
+!
+boot-start-marker
+boot-end-marker
+!
+!
+!
+no aaa new-model
+clock timezone EET 2 0
+!
+!
+!
+!
+!
+vtp file nvram:vlan.dat
+vtp mode transparent
+no ip icmp rate-limit unreachable
+!
+ip dhcp relay information option
+!
+!
+no ip domain-lookup
+ip host webserver 209.65.200.241
+no ip cef
+ipv6 unicast-routing
+ipv6 cef
+!
+!
+archive
+ log config
+  hidekeys
+!
+spanning-tree mode rapid-pvst
+spanning-tree extend system-id
+spanning-tree vlan 1,10,200 priority 28672
+spanning-tree vlan 20 priority 8192
+!
+vlan internal allocation policy ascending
+!
+vlan 10,20,200 
+!
+track 5 interface Ethernet0/1 line-protocol
+!
+ip tcp synwait-time 5
+! 
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+macro name add_vlan
+end
+vlan database
+vlan $v
+exit
+@
+macro name del_vlan
+end
+vlan database
+no vlan $v
+exit
+@
+!
+!
+interface Port-channel1
+ no shutdown
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+!
+interface Ethernet0/0
+ no shutdown
+ description *** Unused for Layer2 EtherSwitch ***
+ no switchport
+ mac-address aabb.cc00.b200
+ ip address 10.2.4.14 255.255.255.252
+ duplex auto
+ ipv6 address 2026::2:2/122
+ ipv6 address 2026::3:2/122
+ ipv6 rip Get-Ripped enable
+!
+interface Ethernet0/1
+ no shutdown
+ description connection to R4
+ no switchport
+ mac-address aabb.cc00.b020
+ ip address 10.1.4.10 255.255.255.252
+ duplex auto
+!
+interface Ethernet0/2
+ no shutdown
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+ channel-group 1 mode desirable
+!
+interface Ethernet0/3
+ no shutdown
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+ channel-group 1 mode desirable
+!
+interface Ethernet1/0
+ no shutdown
+ switchport trunk encapsulation dot1q
+!
+interface Ethernet1/1
+ no shutdown
+ switchport trunk encapsulation dot1q
+ switchport trunk native vlan 200
+ switchport mode trunk
+!
+interface Ethernet1/2
+ no shutdown
+ switchport trunk encapsulation dot1q
+ switchport trunk native vlan 200
+ switchport mode trunk
+ shutdown
+!
+interface Ethernet1/3
+ no shutdown
+ switchport trunk encapsulation dot1q
+ switchport trunk native vlan 200
+ switchport mode trunk
+!
+interface Vlan1
+ no shutdown
+ no ip address
+ shutdown
+!
+interface Vlan10
+ no shutdown
+ mac-address aabb.cc80.d002
+ ip address 10.2.1.2 255.255.255.0
+ ip helper-address 4.4.4.4 
+ standby 10 ip 10.2.1.254
+ standby 10 preempt
+!
+interface Vlan20
+ no shutdown
+ mac-address aabb.cc80.d002
+ ip address 10.2.2.1 255.255.255.0
+ ip helper-address 4.4.4.4 
+ standby 20 ip 10.2.2.254
+ standby 20 priority 105
+ standby 20 preempt
+ standby 20 track 5 decrement 6
+!
+interface Vlan200
+ no shutdown
+ mac-address aabb.cc80.d002
+ ip address 192.168.1.130 255.255.255.224
+!
+!
+router eigrp 10
+ network 10.1.4.8 0.0.0.3
+ network 10.2.1.0 0.0.0.255
+ network 10.2.2.0 0.0.0.255
+ network 10.2.4.12 0.0.0.3
+ network 192.168.1.128 0.0.0.31
+ passive-interface Vlan10
+ passive-interface Vlan20
+ passive-interface Vlan200
+!
+ip forward-protocol nd
+!
+!
+no ip http server
+no ip http secure-server
+!
+!
+arp 10.1.4.9 aabb.cc00.b010 ARPA
+ipv6 router rip Get-Ripped
+!
+!
+!
+!
+control-plane
+!
+!
+line con 0
+ logging synchronous
+line aux 0
+line vty 0 4
+ login
+!
+!
+end

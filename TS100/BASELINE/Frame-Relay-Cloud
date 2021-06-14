@@ -1,0 +1,229 @@
+
+!
+version 15.3
+no service timestamps debug uptime
+no service timestamps log uptime
+no service password-encryption
+!
+hostname Frame-Switch
+!
+boot-start-marker
+boot-end-marker
+!
+!
+!
+no aaa new-model
+clock timezone EET 2 0
+mmi polling-interval 60
+no mmi auto-configure
+no mmi pvc
+mmi snmp-timeout 180
+no ip icmp rate-limit unreachable
+!
+!
+!
+!
+
+
+!
+!
+!
+!
+no ip domain lookup
+ip cef
+ipv6 unicast-routing
+ipv6 cef
+ipv6 multicast rpf use-bgp
+!
+frame-relay switching
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+!
+!
+!
+!
+redundancy
+!
+!
+ip tcp synwait-time 5
+ip ssh version 1
+csdb tcp synwait-time 30
+csdb tcp idle-time 3600
+csdb tcp finwait-time 5
+csdb tcp reassembly max-memory 1024
+csdb tcp reassembly max-queue-length 16
+csdb udp idle-time 30
+csdb icmp idle-time 10
+csdb session max-session 65535
+! 
+!
+!
+!
+crypto isakmp diagnose error
+!
+!
+!
+!
+!
+!
+!
+!
+interface Ethernet0/0
+ no shutdown
+ no ip address
+ shutdown
+!
+interface Ethernet0/1
+ no shutdown
+ no ip address
+ shutdown
+!
+interface Ethernet0/2
+ no shutdown
+ no ip address
+ shutdown
+!
+interface Ethernet0/3
+ no shutdown
+ no ip address
+ shutdown
+!
+interface Serial1/0
+ no shutdown
+ no ip address
+ serial restart-delay 0
+!
+interface Serial1/1
+ no shutdown
+ no ip address
+ serial restart-delay 0
+!
+interface Serial1/2
+ no shutdown
+ no ip address
+ serial restart-delay 0
+!
+interface Serial1/3
+ no shutdown
+ no ip address
+ serial restart-delay 0
+!
+interface Serial2/0
+ no shutdown
+ no ip address
+ encapsulation frame-relay
+ serial restart-delay 0
+ frame-relay intf-type dce
+!
+interface Serial2/1
+ no shutdown
+ no ip address
+ encapsulation frame-relay
+ serial restart-delay 0
+ frame-relay intf-type dce
+!
+interface Serial2/2
+ no shutdown
+ no ip address
+ encapsulation frame-relay
+ serial restart-delay 0
+ frame-relay intf-type dce
+!
+interface Serial2/3
+ no shutdown
+ no ip address
+ encapsulation frame-relay
+ serial restart-delay 0
+ frame-relay intf-type dce
+!
+interface Serial3/0
+ no shutdown
+ no ip address
+ serial restart-delay 0
+!
+interface Serial3/1
+ no shutdown
+ no ip address
+ serial restart-delay 0
+!
+interface Serial3/2
+ no shutdown
+ no ip address
+ serial restart-delay 0
+!
+interface Serial3/3
+ no shutdown
+ no ip address
+ serial restart-delay 0
+!
+interface Serial4/0
+ no shutdown
+ no ip address
+ shutdown
+ serial restart-delay 0
+!
+interface Serial4/1
+ no shutdown
+ no ip address
+ shutdown
+ serial restart-delay 0
+!
+interface Serial4/2
+ no shutdown
+ no ip address
+ shutdown
+ serial restart-delay 0
+!
+interface Serial4/3
+ no shutdown
+ no ip address
+ shutdown
+ serial restart-delay 0
+!
+ip forward-protocol nd
+!
+!
+no ip http server
+no ip http secure-server
+!
+connect r1-r2 Serial2/1 122 Serial2/2 221 
+ !
+!
+connect r2-r3 Serial2/2 223 Serial2/3 322 
+ !
+!
+connect r3-r4 Serial2/3 324 Serial2/0 423 
+ !
+!
+!
+!
+!
+control-plane
+!
+!
+!
+!
+!
+!
+alias exec c config t
+!
+line con 0
+ exec-timeout 0 0
+ privilege level 15
+ logging synchronous
+ stopbits 1
+line aux 0
+ exec-timeout 0 0
+ privilege level 15
+ logging synchronous
+ stopbits 1
+line vty 0 4
+ login
+ transport input all
+!
+!
+end
