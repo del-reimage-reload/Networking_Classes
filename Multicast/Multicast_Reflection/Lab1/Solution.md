@@ -26,6 +26,10 @@ interface Ethernet0/1
  ip access-group deny in
  ip access-group mcast out
  ip pim sparse-mode
+!
+interface Ethernet0/3
+ ip pim sparse-mode
+!
 ```
 ### Blue_Edge
 
@@ -136,5 +140,6 @@ class-map type multicast-flows One_way_multicast_reflect
  group 236.1.1.1
 !
 interface Ethernet0/2
+ ip pim sparse-mode
  ip igmp static-group class-map One_way_multicast_reflect
 ```
