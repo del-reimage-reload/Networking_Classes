@@ -2,11 +2,11 @@
 
 1. Ensure Multicast Routing is enabled on all devices
 ```
-   !
-   ip multicast-routing
-   !
-   ip pim auto-rp listener
-   !
+!
+ip multicast-routing
+!
+ip pim autorp listener
+!
 ```   
 2. One the Green and Blue Router Configure a non-routable IP and ACLs to only allow specific traffic through
 ### Green
@@ -127,6 +127,9 @@ interface Ethernet0/2
  ip igmp static-group class-map One_way_multicast_reflect
 ```
 12. Within the blue network we need to apply the same static join to ensure the traffic continues to be routed with the network
+
+### Blue
+
 ```
 class-map type multicast-flows One_way_multicast_reflect
  group 235.1.1.1
